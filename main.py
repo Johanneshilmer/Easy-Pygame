@@ -16,6 +16,10 @@ SCREEN_HEIGHT = 600
 # Create the screen.
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+#Create event for adding new enemys
+ADDENEMY = pygame.USEREVENT + 1
+pygame.time.set_timer(ADDENEMY, 250)
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -61,15 +65,18 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.move_ip(-self.speed, 0)
         if self.rect.right < 0:
             self.kill()
+            
 
 player = Player()
 enemies = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
+# Setup the clock for a decent framerate
+clock = pygame.time.Clock()
+
+
 
 pygame.init()
-
-
 #Game loop
 running = True
 while running:
@@ -83,6 +90,15 @@ while running:
         # Check for QUIT event. If QUIT, then set running to false.
         elif event.type == QUIT:
             running = False
+            
+        #Add a new enemy.
+        elif event.type == ADDENEMY:
+            new_enemy = Enemy()
+            enemies.add(new_enemy)
+            all_sprites.add(new_enemy)
+    
+    #Update enemy position.
+    enemies.update()
 
     # Get the set of keys pressed and check for user input
     pressed_keys = pygame.key.get_pressed()
@@ -99,6 +115,13 @@ while running:
     # Draw all sprites
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)
+        
+    if pygame.sprite.spritecollideany(player, enemies):
+        player.kill()
+        running = False
 
     # Update the display
     pygame.display.flip()
+    
+    # make the game a 30FPS "frames per second."
+    clock.tick(30)
