@@ -1,4 +1,14 @@
 import pygame
+from pygame.locals import (
+    K_UP,
+    K_DOWN,
+    K_LEFT,
+    K_RIGHT,
+    K_ESCAPE,
+    KEYDOWN,
+    QUIT,
+)
+
 pygame.init()
 
 # Set up the window for the game.
@@ -19,7 +29,7 @@ while running:
     # Draw a solid blue circle in the center
     pygame.draw.circle(screen, (0, 0, 255), (250, 250), 75)
     
-    # Flip the display
+    #update the screen.
     pygame.display.flip()
 
 #Game loop ends.
