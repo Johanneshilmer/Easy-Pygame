@@ -10,6 +10,8 @@ from pygame.locals import (
     QUIT,
 )
 
+dodged = 0
+
 #Define the screen size.
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
@@ -20,6 +22,11 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 ADDENEMY = pygame.USEREVENT + 1
 pygame.time.set_timer(ADDENEMY, 250)
 
+def score(count):
+    font = pygame.font.SysFont(None, 25)
+    text = font.render("Score " + str(dodged), True, (255,255,255))
+    screen.blit(text, (300,0))
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -29,6 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect()
         
     def update(self, pressed_keys):
+        
         if pressed_keys[K_UP]:
             self.rect.move_ip(0, -5)
         if pressed_keys[K_DOWN]:
@@ -80,6 +88,7 @@ pygame.init()
 #Game loop
 running = True
 while running:
+    
     # for loop through the event queue
     for event in pygame.event.get():
         # Check for KEYDOWN event
@@ -96,6 +105,9 @@ while running:
             new_enemy = Enemy()
             enemies.add(new_enemy)
             all_sprites.add(new_enemy)
+            #adding the score every time a enemy spawns.
+            dodged += 1
+            
     
     #Update enemy position.
     enemies.update()
@@ -108,6 +120,7 @@ while running:
     
     # Fill the screen with black
     screen.fill((0, 0, 0))
+    score(dodged)
 
     # Draw the player on the screen
     screen.blit(player.surf, player.rect)
